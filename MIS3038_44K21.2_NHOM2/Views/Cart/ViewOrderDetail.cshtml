@@ -1,0 +1,151 @@
+﻿@using WebBookStore.Models;
+@model List<Cart>
+
+
+@{
+    Layout = "~/Views/Layout/PurchaseLayout.cshtml";
+}
+
+<div class="order-info">
+    <a href="@Url.Action("Index", "Home")">
+        <img src="~/Asset/img/logo.png" />
+    </a>
+    @using (Html.BeginForm("OrderCart", "Cart"))
+    {
+        <div class="order-info__item">
+            <p>Số điện thoại liên lạc</p>
+            <input class="contact-input sdt" id="sdt" onchange="onChangesdt(this.value)" type="text" name="Contact" placeholder="Số Điện Thoại">
+        </div>
+        <div class="order-info__item">
+            <p>Địa chỉ giao hàng</p>
+            <input class="name-input name" id="name" onchange="onChangeName(this.value)" type="text" name="Name" placeholder="Tên người nhận">
+            <input class="address-input diachi" id="diachi" onchange="onChangediachi(this.value)" type="text" name="Address" placeholder="Địa chỉ người nhận">
+            <select class="city-input tp" id="tp" type="text"  name="City">
+                <option selected disabled hidden>Chọn thành phố</option>
+            </select>
+        </div>
+        <div class="order-ctrl">
+            <button class="btn btn-secondary" onchange="clearinfo">
+                Đặt hàng   
+            </button>
+            <a href="@Url.Action("ViewCart", "Cart")">Trở về giỏ hàng</a>
+        </div>
+    }
+</div>
+<div class="order-detail">
+    <div class="order__list">
+        @{
+            foreach (var item in Model)
+            {
+                <div class="order__item row">
+                    <div class="order__item-img">
+                        <img src="@item.sImages" alt="">
+                        <span>@item.sQuantity</span>
+                    </div>
+                    <h3 class="name">@item.sTitle</h3>
+                    <p class="order__item-price">
+                        <span class="price-number">@item.Total</span> VND
+                    </p>
+                </div>
+            }
+        }
+    </div>
+    @using (Html.BeginForm("GetDiscount", "Cart"))
+    {
+        <input style="display: none" class="contact-hidden" name="contact-hidden" />
+        <input style="display: none" class="name-hidden" name="name-hidden"/>
+        <input style="display: none" class="address-hidden" name="address-hidden" />
+        <input style="display: none" class="city-hidden" name="city-hidden"/>
+        @*<div class="order-discount row">
+            <input type="text" name="discount" placeholder="Mã giảm giá">
+            <button class="btn btn-secondary">Áp dụng</button>
+        </div>*@
+    }
+    <div class="order-total">
+        @{
+            <p class="row">Tổng tiền: <span><span class="price-number">@ViewBag.TotalPrice</span> VND</span></p>
+            @*<p class="row">Giảm giá: <span>0%</span></p>*@
+            <p class="row">Thành tiền: <span><span class="price-number">@ViewBag.TotalPrice</span> VND</span></p>
+        }
+    </div>
+    <img src="~/Asset/img/payment-method.png" />
+</div>
+
+<script type="text/javascript">
+    const contactInput = document.querySelector(".contact-input");
+    contactInput.addEventListener("change", (e) => {
+        const contactInputHidden = document.querySelector(".contact-hidden");
+        contactInputHidden.value = e.target.value;
+        //console.log(contactInputHidden.value);
+    });
+
+    const nameInput = document.querySelector(".name-input");
+    nameInput.addEventListener("change", (e) => {
+        const nameInputHidden = document.querySelector(".name-hidden");
+        nameInputHidden.value = e.target.value;
+        //console.log(nameInputHidden.value);
+    });
+
+    const addressInput = document.querySelector(".address-input");
+    addressInput.addEventListener("change", (e) => {
+        const addressInputHidden = document.querySelector(".address-hidden");
+        addressInputHidden.value = e.target.value;
+        //console.log(addressInputHidden.value);
+    });
+
+    const cityInput = document.querySelector(".city-input");
+    cityInput.addEventListener("change", (e) => {
+        const cityInputHidden = document.querySelector(".city-hidden");
+        cityInputHidden.value = e.target.value;
+        console.log(cityInputHidden.value);
+    });
+
+
+
+    onChangeName = (value) => {
+        localStorage.setItem("name", value)
+
+    }
+    onChangediachi = (value) => {
+        localStorage.setItem("diachi", value)
+    }
+    onChangesdt = (value) => {
+        localStorage.setItem("sdt", value)
+    }
+    clearinfo  =()=> {
+        localStorage.clear()
+    }
+    
+</script>
+<script>
+    const prices = document.querySelectorAll(".price-number");
+    prices.forEach(price => {
+        price.innerHTML = Number(price.innerHTML).toLocaleString("en-US");
+    })
+</script>
+<script>
+    window.addEventListener('load', function () {
+        const name = localStorage.getItem("name")
+        console.log(name)
+        if (name) {
+            $("#name").val(name)
+        }
+    }) 
+
+  
+     window.addEventListener('load', function () {
+        const diachi = localStorage.getItem("diachi")
+        console.log(diachi)
+        if (diachi) {
+            $("#diachi").val(diachi)
+        }
+     })
+    window.addEventListener('load', function () {
+        const sdt = localStorage.getItem("sdt")
+        console.log(sdt)
+        if (sdt) {
+            $("#sdt").val(sdt)
+        }
+    })
+   
+</script>

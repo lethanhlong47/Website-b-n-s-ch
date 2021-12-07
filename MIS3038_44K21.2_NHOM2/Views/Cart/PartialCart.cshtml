@@ -1,0 +1,54 @@
+﻿@using WebBookStore.Models;
+@model List<Cart>
+@{
+    if (@ViewBag.TotalItem == null)
+    {
+        <div class="quantity">0</div>
+    }
+    else
+    {
+        <div class="quantity">@ViewBag.TotalItem</div>
+        <div class="cart__detail">
+            <div class="cart__list">
+                @{
+                    for (int i = 0; i < Model.Count; i++)
+                    {
+                        <div class="cart__item row--base">
+                            <img src="@Model[i].sImages" />
+                            <div class="cart__item-info">
+                                <h4 class="name">@Model[i].sTitle</h4>
+                                @using (Html.BeginForm("UpdateCart", "Cart", new { @id_book = Model[i].sID_Book, @Strurl = Request.Url.ToString() }))
+                                {
+                                    <div class="cart__item-quantity row">
+                                        <button type="submit" class="btn cart-btn-increase" name="btninc" value="1"><i class="fa fa-plus"></i></button>
+                                        <p>@Model[i].sQuantity</p>
+                                        <button type="submit" class="btn cart-btn-decrease" name="btninc" value="-1"><i class="fa fa-minus"></i></button>
+                                    </div>
+                                }
+                                <p><span class="price-number">@Model[i].sPrice</span> VND</p>
+                            </div>
+                            <p class="delete-cart__item">
+                                @using (Html.BeginForm("DeleteCart", "Cart", new { @id_book = Model[i].sID_Book, @Strurl = Request.Url.ToString() }))
+                                {
+                                    <button class="fa fa-times"></button>
+                                }
+                            </p>
+                        </div>
+                    }
+                }
+            </div>
+            <p class="total">Tất cả: <span class="price-number">@ViewBag.TotalPrice</span> VND</p>
+            <div class="cart__detail-ctrl row">
+                @using (Html.BeginForm("ViewOrderDetail", "Cart"))
+                {
+                    <button class="btn btn-secondary">Thanh Toán</button>    
+                }
+                @using (Html.BeginForm("ClearAllCart", "Cart", new { @Strurl = Request.Url.ToString() }))
+                {
+                    <button class="btn btn-danger">Xóa tất cả</button>
+                }
+            </div>
+        </div>
+    }
+}
+

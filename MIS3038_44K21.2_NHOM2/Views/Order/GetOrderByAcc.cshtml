@@ -1,0 +1,23 @@
+﻿@using WebBookStore.Models;
+@model List<Order>
+
+<div class="tab-order-list">
+    @{
+        foreach (var item in Model)
+        {
+            <div class="row tab-order-item">
+                <div class="col-3-2 tab-order-item-id">@item.Id_Order</div>
+                <div class="col-3-2">@item.OrderDate.Day/@item.OrderDate.Month/@item.OrderDate.Year</div>
+                <div class="col-3">@item.AddressShipping</div>
+                <div class="col-3-2"><span class="price-number">@item.Totalbill</span> VND</div>
+                <div class="col-3-2">@item.StatusOrder.StatusDetail.ToString()</div>
+                @using (Html.BeginForm("OrderDetailView", "Order",new { @Id_Order = item.Id_Order}))
+                {
+                    <div style="padding-left: 2rem">
+                        <button class="btn"><i class="fa fa-eye"></i></button>
+                    </div>
+                }
+            </div>
+        }
+    }
+</div>

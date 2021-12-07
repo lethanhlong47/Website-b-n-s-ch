@@ -1,0 +1,386 @@
+﻿@using WebBookStore.Models;
+@{
+    BookStoreEntities db = new BookStoreEntities();
+    var item = db.Books.Where(n => n.Id_Category == Model.Id_Category).OrderBy(n => n.Id_Category).Take(8).ToList();
+}
+@model Book
+
+@*@{
+        Layout = "~/Views/Layout/UserLayout.cshtml";
+    }*@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @*<title>Document</title>*@
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <link href="~/Asset/style/reset.css" rel="stylesheet" />
+    @*SLICK SLIDER
+        Add the slick-theme.css if you want default styling*@
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+    @*Add the slick-theme.css if you want default styling*@
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+    @*STYLES*@
+    <link href="~/Asset/style/style.css" rel="stylesheet" />
+</head>
+
+<body>
+    @*-------------------------HEADER----------------------------*@
+    <header>
+        <div class="container">
+            <div class="header-content row">
+                <div class="header-left row">
+                    <a href="@Url.Action("Index", "Home")">
+                        <img src="~/Asset/img/logo.png" />
+                    </a>
+                    <div class="categories">
+                        <i class="fa fa-list-ul"></i>
+                        <span>Thể loại</span>
+                        <div class="categories-content row">
+                            <ul class="categories-item">
+                                <h5>Tất cả thể loại</h5>
+                                <li>
+                                    <a href="@Url.Action("BookByCategory", "Category" ,new { @id_category = 1 })">Công nghệ thông tin</a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("BookByCategory", "Category" ,new { @id_category = 10 })">Văn Học</a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("BookByCategory", "Category" ,new { @id_category = 11 })">Tôn Giáo</a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("BookByCategory", "Category" ,new { @id_category = 12 })">Truyện Tranh</a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("BookByCategory", "Category" ,new { @id_category = 13 })">Từ Điển Ngoại Ngữ</a>
+                                </li>
+                            </ul>
+                            <ul class="categories-item">
+                                <h5>Tất cả thể loại</h5>
+                                <li>
+                                    <a href="@Url.Action("BookByCategory", "Category" ,new { @id_category = 14 })">Y Học</a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("BookByCategory", "Category" ,new { @id_category = 2 })">Khoa Học Kĩ Thuật</a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("BookByCategory", "Category" ,new { @id_category = 3 })">Giáo Khoa</a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("BookByCategory", "Category" ,new { @id_category = 4 })">Kiến Thức</a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("BookByCategory", "Category" ,new { @id_category = 5 })">Kĩ Năng</a>
+                                </li>
+                            </ul>
+                            <ul class="categories-item">
+                                <h5>Tất cả thể loại</h5>
+                                <li>
+                                    <a href="@Url.Action("BookByCategory", "Category" ,new { @id_category = 6 })">Kinh Tế</a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("BookByCategory", "Category" ,new { @id_category = 7 })">Lịch Sử Địa Lý</a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("BookByCategory", "Category" ,new { @id_category = 8 })">Sách Tham Khảo</a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("BookByCategory", "Category" ,new { @id_category = 9 })">Sách Thiếu Nhi</a>
+                                </li>
+                            </ul>
+                            <div class="categories-item">
+                                <h5>Banner Image</h5>
+                                <img src="~/Asset/img/categories-img.jpg" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-mid">
+                    <form method="get" class="header-search row" action="~/Searching/ResultSearchingInLayoutSearching">
+                        <i class="fa fa-search"></i>
+                        <input type="text" name="Keyword" placeholder="Tìm kiếm">
+                        <button type="submit" class="btn-search"></button>
+                    </form>
+                </div>
+                <div class="header-right row">
+                    <div class="cart">
+                        <a href="@Url.Action("ViewCart", "Cart")">
+                            <i class="fa fa-shopping-cart cart"></i>
+                        </a>
+                        @Html.Action("PartialCart", "Cart")
+                    </div>
+                    <div class="login-status">
+                        @Html.Action("PartialLogin", "Login")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    @*------------------------DETAIL-----------------------------*@
+    <section data-id-item=@Model.Id_Book class="book">
+        <div class="container">
+            <div class="book-content row--base">
+                <div class="book__info">
+                    <div class="book__item">
+                        <div class="row--base">
+                            <img class="book__item--image" src=@Model.Images>
+                            <div class="book__item--detail">
+                                <h3>
+                                    @Model.Title
+                                </h3>
+                                <p class="author">@Model.Author.Name</p>
+                                <p class="price"><span class="price-number">@Model.Price</span> VND</p>
+                                <p class="description">
+                                    @Model.Description
+                                </p>
+                                <div class="ctrl__list">
+                                    <div class="numeric">
+                                        <button class="numeric__button" onclick="btnIncreaseClick()">+</button>
+                                        <input type="text" id="inc" name="value-item" value="1" />
+                                        <button class="numeric__button" onclick="btnDecreaseClick()">-</button>
+                                    </div>
+                                    @*@using (Html.BeginForm("AddToCart", "Cart", new { @id_book = Model.Id_Book, @Strurl = Request.Url.ToString() }))
+                                        {
+                                            <button class="ctrl--add-to-cart btn">
+                                                Thêm vào giỏ hàng
+                                            </button>
+                                        }*@
+                                    <button class="btn btn-secondary" id="btnadd">
+                                        Thêm vào giỏ hàng
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="book__detail">
+                        <tbody>
+                            <tr>
+                                <td class="title">
+                                    Tựa đề sách
+                                </td>
+                                <td>
+                                    @Model.Title
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="title">
+                                    Tác giả
+                                </td>
+                                <td>
+                                    @Model.Author.Name
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="title">
+                                    Thể loại
+                                </td>
+                                <td>
+                                    @Model.Category.NameCatelogy
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="title">
+                                    Tình trạng
+                                </td>
+                                <td>
+                                    @if (Model.Condition == true)
+                                    {
+                                        <h1>Còn Hàng</h1>
+                                    }
+                                    else
+                                    {
+                                        <h1>Hết Hàng</h1>
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="title">
+                                    Mô tả
+                                </td>
+                                <td>
+                                    @Model.Description
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="book-related">
+                    <h4>Sách liên quan</h4>
+                    <div class="book-related__list">
+                        @{
+                            foreach (var i in item)
+                            {
+                                <div class="book-related__item row--base">
+                                    <a href="@Url.Action("DetailBook", new { @idbook = i.Id_Book})" class="book-related__img">
+                                        <img src=@i.Images />
+                                    </a>
+                                    <div class="book-related__info">
+                                        <a href="@Url.Action("DetailBook", new { @idbook = i.Id_Book})">@i.Title</a>
+                                        <p><span class="price-number">@i.Price</span> VND</p>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @*------------------------FOOTER------------------------------*@
+    <section class="footer">
+        <div class="container">
+            @*<div class="mailling">
+            <div class="mailling-content">
+                <h3>
+                    Đăng ký thông báo mới
+                </h3>
+                <div class="form-group row">
+                    <input type="text" placeholder="Enter yout e-mail address">
+                    <button class="btn">Đăng ký</button>
+                </div>
+            </div>
+        </div>*@
+            <div class="footer-content row">
+                <div class="footer-item">
+                    <h5><img src="~/Asset/img/logo-white.png" /></h5>
+                    <p>
+                        Cửa hàng sách
+                    </p>
+                    <a href="https://www.google.com/maps/place/Tr%C6%B0%E1%BB%9Dng+%C4%90%E1%BA%A1i+h%E1%BB%8Dc+B%C3%A1ch+Khoa+-+%C4%90%E1%BA%A1i+h%E1%BB%8Dc+%C4%90%C3%A0+N%E1%BA%B5ng/16.0738013,108.1499142,15z/data=!4m5!3m4!1s0x0:0x714561e9f3a7292c!8m2!3d16.0738013!4d108.1499142">Thông tin về trang web</a>
+                </div>
+                <div class="footer-item">
+                    <h5 class="row">
+                        <img src="~/Asset/img/icon-7webp.png" />
+                        Địa chỉ
+                    </h5>
+                    <p>
+                        <i class="fa fa-location-arrow"></i>
+                        99 Nguyễn Văn Linh, Đà Nẵng
+                    </p>
+                    <p>
+                        <i class="fa fa-phone"></i>
+                        Số điện thoại: 0989999999
+                    </p>
+                    <p>
+                        <i class="fa fa-envelope"></i>
+                        Mail: admin@bookshop.com
+                    </p>
+                </div>
+                <div class="footer-item">
+                    <h5 class="row">
+                        <img src="~/Asset/img/pen.png" />
+                        Tìm kiếm hàng đầu
+                    </h5>
+
+                    <ul>
+                        <li>
+                            <a href="">
+                                <i class="a"></i>
+                                Đắc Nhân Tâm
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class=""></i>
+                                Nhà giả kim
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class=""></i>
+                                Tony buổi sáng
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class=""></i>
+                                Ngữ pháp tiếng anh
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="footer-item">
+                    <h5 class="row">
+                        <img src="~/Asset/img/icon-8.png" />
+                        Thông tin
+                    </h5>
+                    <ul>
+                        <li>
+                            <a href="https://www.facebook.com/lethanhlong.47/">
+                                <i class="fa fa-id-card"></i>
+                                Lê Thành Long
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <script src="~/Asset/js/index.js"></script>
+    @*<script src="~/Asset/js/detail.js"></script>*@
+    <script>
+        function btnIncreaseClick() {
+            var i = parseInt(document.getElementById('inc').value);
+            i = isNaN(i) ? 0 : i;
+            document.getElementById('inc').value = ++i;
+        }
+    </script>
+    <script>
+        function btnDecreaseClick() {
+            var i = parseInt(document.getElementById('inc').value);
+            i = isNaN(i) ? 0 : i;
+            if (i > 0) {
+                document.getElementById('inc').value = --i;
+            }
+        }
+    </script>
+    <script>
+        @*$(function () {
+            $('#btnadd').unbind('click');
+            $('#btnadd').on('click', function () {
+                $.ajax({
+                    url: "/Cart/AddToCartMany",
+                    type: 'Post',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    data: JSON.stringify({
+                        id_book: 
+                    })
+                })
+            })
+        })*@
+        let idBook = document.querySelector(".book").getAttribute("data-id-item");
+        let quantity = document.getElementById('inc');
+        document.querySelector("#btnadd").addEventListener("click", () => {
+            fetch("/Cart/AddToCartMany", {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'id_book': idBook,
+                    'Strurl': window.location.href.toString(),
+                    'result': quantity.value
+                })
+            })
+                .then()
+                .then(() => {
+                    location.replace(window.location.href);
+                })
+                .catch(error => console.log('Unable to add item.', error));
+        })
+    </script>
+</body>
+</html>

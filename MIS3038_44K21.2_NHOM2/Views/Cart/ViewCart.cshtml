@@ -1,0 +1,88 @@
+﻿
+@{
+    Layout = "~/Views/Layout/CartLayout.cshtml";
+}
+@using WebBookStore.Models;
+@model List<Cart>
+@{
+    int tongtien = 0;
+    foreach (var item in Model)
+    {
+        tongtien += item.Total;
+    }
+}
+
+<div class="cart-container">
+    <table class="cart-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Tên sách</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>Tổng cộng</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><a href="@Url.Action("DetailBook", "Book", new { @idbook = item.sID_Book})"><img src="@item.sImages" /></a></td>
+                    <td>
+                        <h4 class="name">@item.sTitle</h4>
+                        <p>@item.sAuthor</p>
+                    </td>
+                    <td><span class="price-number">@item.sPrice.ToString()</span> VND</td>
+                    <td>
+                        @using (Html.BeginForm("UpdateCart", "Cart", new { @id_book = item.sID_Book, @Strurl = Request.Url.ToString() }, FormMethod.Post))
+                        {
+                            <div class="cart-quantity">
+                                <button type="submit" name="btninc" value="1"><i class="fa fa-chevron-up"></i></button>
+                                <span>@item.sQuantity</span>
+                                <button type="submit" name="btninc" value="-1"><i class="fa fa-chevron-down"></i></button>
+                            </div>
+                        }
+                    </td>
+                    <td>
+                        <span class="price-number">@item.Total.ToString()</span> VND
+                        <p class="cart-remove"><i class="fa fa-trash"></i>@Html.ActionLink("Xóa sản phẩm", "DeleteCart", new { @id_book = item.sID_Book, @Strurl = Request.Url.ToString() })</p>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+    <div class="cart-container-ctrl row">
+        @using (Html.BeginForm("Index", "Home"))
+        {
+            <button class="btn">Tiếp tục mua sắm</button>
+        }
+        @using (Html.BeginForm("ClearAllCart", "Cart", new { @Strurl = Request.Url.ToString() }))
+        {
+            <button class="btn btn-danger">Xóa tất cả</button>
+        }
+    </div>
+</div>
+<div class="check-out">
+    <div class="order-summary">
+        <h3>
+            Thông tin Order
+        </h3>
+        <div class="subtotal">
+            <p class="row">Tất cả: <span>@Model.Count</span></p>
+            <p class="row">Tổng tiền: <span><span class="price-number">@tongtien</span> VND</span></p>
+            @using (Html.BeginForm("ViewOrderDetail", "Cart"))
+            {
+                <button class="btn btn-secondary">
+                    Thanh toán
+                </button>
+            }
+        </div>
+    </div>
+    <div class="payment-method">
+        <h3>Cách thức thanh toán </h3>
+        <div class="method">
+            <img src="~/Asset/img/payment-method.png" />
+        </div>
+    </div>
+</div>

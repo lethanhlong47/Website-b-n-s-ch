@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "VerifyAccount";
+}
+
+<h2>Xác thực tài khoản</h2>
+
+
+
+@if (ViewBag.Status != null && Convert.ToBoolean(ViewBag.Status))
+{
+    <div class="alert alert-success">
+        <strong>Thành Công!</strong> Tài khoản của bạn đã được kích hoạt thành công. Bạn có thể nhấn vào đây để <a href="@Url.Action("Index", "Login")">Đăng nhập</a>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">
+        <strong>Có lỗi!</strong> @ViewBag.Message
+    </div>
+}
